@@ -1,7 +1,7 @@
 import React from 'react';
 
 const BlogPage = () => {
-  return <div>This is the Events Page</div>;
+  return <div>This is the Blog Page</div>;
 };
 
 export default BlogPage;
