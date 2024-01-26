@@ -28,7 +28,7 @@ const NavBar = () => {
     backgroundColor: '#525252',
     padding: '26px 0',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.15)',
-    borderWidth: '6.5px',
+    borderWidth: '7.5px',
     borderColor: 'lightgray',
     borderRadius: '4.1px',
     height: '79px',
@@ -39,7 +39,7 @@ const NavBar = () => {
     border: 'solid #f2f2f2',
     textAlign: 'center',
     position: isSticky ? 'sticky' : 'relative',
-    top: isSticky ? 0 : '500px',
+    top: isSticky ? 0 : '468px',
   };
 
   const linkStyle = {

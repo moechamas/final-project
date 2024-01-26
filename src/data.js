@@ -4,42 +4,49 @@ const events = [
       title: "ECHO BASE B2B LUNAR GROOVE | MOON TIDES",
       startDate: "February 5, 2024",
       endDate: "February 6, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS",
+      price: 20 
+
     },
     {
       id: 2,
       title: "SOLAR WAVE B2B HORIZON SHIFT",
       startDate: "February 10, 2024",
       endDate: "February 11, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS", 
+      price: 50
     },
     {
       id: 3,
       title: "NEBULA BEATS B2B STAR DUST",
       startDate: "February 15, 2024",
       endDate: "February 16, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS",
+      price: 35
     },
     {
       id: 4,
       title: "GALACTIC RHYTHM B2B COSMIC FLOW",
       startDate: "February 20, 2024",
       endDate: "February 21, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS",
+      price: 40
     },
     {
       id: 5,
       title: "PULSE VIBES B2B ECHOIC WAVES",
       startDate: "February 25, 2024",
       endDate: "February 26, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS",
+      price: 25
     },
     {
       id: 6,
       title: "DEEP SONIC B2B TREMOR TUNES",
       startDate: "March 1, 2024",
       endDate: "March 2, 2024",
-      buttonLabel: "SELECT TICKETS"
+      buttonLabel: "SELECT TICKETS",
+      price: 19 
     },
     
   ];
