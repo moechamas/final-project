@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const { events, reservations } = require('../src/data.js');
+const { events, reservations } = require('../data.js');
 
 const uri = "mongodb+srv://moechamas:fDrc4hrYcWW4iTeG@cluster0.ovqzwlc.mongodb.net/?retryWrites=true&w=majority";
 
