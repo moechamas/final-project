@@ -7,8 +7,9 @@ import Layout from './components/Layout';
 import EventsPage from './components/EventsPage';
 import YourOrderPage from './components/YourOrderPage';
 import BlogPage from './components/BlogPage';
-import PaymentPage from './components/PaymentPage'; 
+import PaymentPage from './components/PaymentPage';
 import { CartProvider } from './components/CartContext';
+import { OrdersProvider } from './components/OrdersContext'; 
 
 const stripePromise = loadStripe('pk_test_51ObW35JuImlUjwCl0ikE3zljwaMRsZcW2KRLG2d21DWhNsF3OztiVhQdekTkeWuzzTSwDx2ay4YLWUlM5JowaORD00NihjjDuR');
 
@@ -21,16 +22,18 @@ function App() {
       <Router>
         <Elements stripe={stripePromise}>
           <CartProvider>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<EventsPage />} />
-                <Route path="/events" element={<EventsPage />} />
-                <Route path="/your-order" element={<YourOrderPage />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/payment" element={<PaymentPage />} /> {/* Add the payment route */}
-                <Route path="*" element={<EventsPage />} />
-              </Routes>
-            </Layout>
+            <OrdersProvider> 
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<EventsPage />} />
+                  <Route path="/events" element={<EventsPage />} />
+                  <Route path="/your-order" element={<YourOrderPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/payment" element={<PaymentPage />} />
+                  <Route path="*" element={<EventsPage />} />
+                </Routes>
+              </Layout>
+            </OrdersProvider>
           </CartProvider>
         </Elements>
       </Router>

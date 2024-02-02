@@ -6,25 +6,6 @@ const generateReservationId = () => {
   return 'res-' + uuidv4();
 };
 
-const handlePayment = async (stripe, cart, navigate, totalCost) => {
-  try {
-    // Convert totalCost to cents
-    const amountInCents = Math.round(totalCost * 100);
-
-    // Create a payment intent using Stripe
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInCents, // Convert totalCost to cents
-      currency: 'usd',
-    });
-
-    // Redirect to the payment form page with the client secret
-    navigate('/payment', { state: { clientSecret: paymentIntent.client_secret } });
-  } catch (error) {
-    console.error('Error processing payment:', error);
-  }
-};
-
-
 // Function to get reservation details
 const getReservationDetails = (cart, totalCost) => {
   const reservationDetails = {
@@ -42,5 +23,4 @@ const getReservationDetails = (cart, totalCost) => {
 module.exports = {
   getReservationDetails,
   generateReservationId,
-  handlePayment
 };
