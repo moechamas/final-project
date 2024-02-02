@@ -1,26 +1,27 @@
+require('dotenv').config({ path: '/Users/chamas/Final-Project/final-project/.env' });
 
-require('dotenv').config(); 
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
-const stripe = require('stripe')('sk_test_51ObW35JuImlUjwClMcXxCRaL1p4Dz7H3BL7ySfC67MWmPjY0vEwmqjeqhfnjqrwI2qV6Q7Xi2PVFXN7uCluFHPu000vLRfrBXf');
-const { handlePayment } = require('./handlers');
+const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
 const cors = require('cors');
 const { events } = require('../data');
+const { connectDB } = require('./mongodbUtil');
 
 const app = express();
-app.use(express.json()); 
+app.use(express.json());
 
 const port = 3006;
 
 // Enhanced Logging Middleware
 app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
-  console.log('Request Headers:', req.headers); 
-  console.log(`Request Body: `, req.body);
-  next();
+    console.log(`Incoming request: ${req.method} ${req.url}`);
+    console.log('Request Headers:', req.headers);
+    console.log(`Request Body: `, req.body);
+    next();
 });
 
-app.use(cors())
+app.use(cors());
+
 
 // Auth0 Configuration
 const config = {
@@ -49,73 +50,51 @@ app.get('/api/events', (req, res) => {
   res.json(events);
 });
 
-app.post('/reservations', (req, res) => {
-  const { cart, totalCost } = req.body;
-  const reservationId = uuidv4();
-  const reservationDetails = getReservationDetails(cart, totalCost);
-
-
-  res.json({ reservationId, ...reservationDetails });
-});
-
-app.post('/create-payment-intent', async (req, res) => {
-  const { cart, totalCost } = req.body;
-
+app.post('/api/reservations', async (req, res) => {
   try {
-    // Call the handlePayment function with totalCost
-    await handlePayment(stripe, cart, totalCost);
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).send({ error: error.message });
-  }
-});
-
-// Route to initiate payment
-app.post('/initiate-payment', async (req, res) => {
-  const { cart, totalCost } = req.body;
-
-  try {
-    // Verify that totalCost is a valid number
-    if (typeof totalCost !== 'number' || isNaN(totalCost)) {
-      throw new Error('Invalid totalCost');
+    const reservation = req.body; 
+    const db = await connectDB();
+    const result = await db.collection('reservations').insertOne(reservation);
+    if (result.acknowledged) {
+      console.log("Reservation saved:", reservation);
+      res.status(201).send(reservation);
+    } else {
+      console.error("Failed to save the reservation");
+      res.status(500).send("Failed to save the reservation");
     }
-
-    // Convert totalCost to cents
-    const amountInCents = Math.round(totalCost * 100);
-
-    // Add console log to check the value of totalCost
-    console.log('Total Cost in cents:', amountInCents);
-
-    // Make the HTTP request to create a payment intent
-    const response = await fetch('http://localhost:3006/create-payment-intent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REACT_APP_STRIPE_SECRET_KEY}`,
-      },
-      body: JSON.stringify({
-        amount: amountInCents, // Use the calculated amount in cents
-      }),
-    });
-
-    const data = await response.json();
-
-    // Debug log to check the response data
-    console.log('Payment Intent Response:', data);
-
-    // Handle the response data as needed
-    // For example, you can redirect the user to a payment form page
-
-    res.json(data);
   } catch (error) {
-    console.error('Error initiating payment:', error);
-    res.status(500).send({ error: error.message });
+    console.error("Error saving the reservation:", error);
+    res.status(500).send("Error saving the reservation");
   }
 });
 
-// Missing closing brace for the try block
+
+app.get('/api/reservations/last', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const lastReservation = await db.collection('reservations')
+      .find({})
+      .sort({ _id: -1 })
+      .limit(1)
+      .toArray();
+    if (lastReservation.length > 0) {
+      console.log("Last reservation found:", lastReservation[0]); 
+      res.json(lastReservation[0]); 
+    } else {
+      console.log("No reservations found");
+      res.status(404).send("No reservations found");
+    }
+  } catch (error) {
+    console.error("Error fetching the last reservation:", error);
+    res.status(500).send("Error fetching the last reservation");
+  }
+});
+
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

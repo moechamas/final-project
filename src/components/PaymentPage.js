@@ -1,23 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { CartContext } from './CartContext';
+import { OrdersContext } from './OrdersContext';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentPage = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [customerDetails, setCustomerDetails] = useState({ firstName: '', lastName: '', address: '' });
 
+  const { totalCost, cart } = useContext(CartContext);
+  const { addOrder } = useContext(OrdersContext);
+  const navigate = useNavigate();
+
+  const handlePaymentSubmission = async (event) => {
+    event.preventDefault();
+    const ticketId = `ticket-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Prepare the order details
+    const orderDetails = {
+      ticketId,
+      items: cart,
+      totalCost,
+      customerDetails
+    };
+
+    // First, post the reservation
+    await createReservation(orderDetails);
+
+    // Add order to context (if needed, depending on how you manage state)
+    addOrder(orderDetails);
+
+    alert('Order placed successfully!');
+    navigate('/your-order'); // Redirect to YourOrderPage
+  };
+
+  // Function to create a reservation
+  const createReservation = async (reservationDetails) => {
+    try {
+      const response = await fetch('http://localhost:3006/api/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reservationDetails),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create the reservation');
+      }
+      const data = await response.json();
+      console.log("Reservation created:", data);
+      return data;
+    } catch (error) {
+      console.error('Error creating the reservation:', error);
+    }
+  };
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerDetails({ ...customerDetails, [name]: value });
   };
 
-  const handlePaymentSubmission = async (event) => {
-    event.preventDefault();
-    // Here, instead of processing the payment, you just simulate success.
-    console.log('Payment details submitted:', customerDetails);
-    alert('Payment successful! (simulation)');
-    // navigate to a success or confirmation page
-  };
 
   return (
     <div style={formContainerStyle}>
@@ -43,9 +87,15 @@ const PaymentPage = () => {
           style={inputStyle} 
           placeholder="Address"
         />
+           
+
         <div style={cardElementContainerStyle}>
           <CardElement style={cardElementStyle} />
         </div>
+        <div style={totalCostStyle}>
+          Total Cost: ${totalCost.toFixed(2)}
+        </div>
+
         <button type="submit" disabled={!stripe} style={submitButtonStyle}>Submit Payment</button>
       </form>
     </div>
@@ -108,5 +158,13 @@ const submitButtonStyle = {
   cursor: 'pointer',
   marginTop: '10px',
 };
+
+const totalCostStyle = { 
+    fontSize: '20px',
+    fontWeight: 'bold',
+    margin: '10px 0',
+  };
+  
+  
 
 export default PaymentPage;
