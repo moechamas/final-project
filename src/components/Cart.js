@@ -29,6 +29,4 @@ const Cart = () => {
 // Styling objects
 
 
-
-
 export default Cart;
