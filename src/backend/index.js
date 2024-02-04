@@ -4,7 +4,7 @@ const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
 const cors = require('cors');
-const { events } = require('../data');
+const { events, pastEvents, reviews } = require('../data');
 const { connectDB } = require('./mongodbUtil');
 
 const app = express();
@@ -90,10 +90,23 @@ app.get('/api/reservations/last', async (req, res) => {
   }
 });
 
+// Handler to fetch past events
+app.get('/api/past-events', (req, res) => {
+  // Simply return the pastEvents array; in a real app, you might query a database
+  res.json(pastEvents);
+});
 
+// Handler to fetch reviews for a specific past event
+app.get('/api/reviews/:eventId', (req, res) => {
+  const { eventId } = req.params;
+  const eventReviews = reviews.filter(review => review.eventId === parseInt(eventId));
 
-
-
+  if (eventReviews.length > 0) {
+    res.json(eventReviews);
+  } else {
+    res.status(404).json({ message: `No reviews found for event with ID ${eventId}` });
+  }
+});
 
 
 app.listen(port, () => {

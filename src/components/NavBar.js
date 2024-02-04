@@ -39,7 +39,7 @@ const NavBar = () => {
     border: 'solid #f2f2f2',
     textAlign: 'center',
     position: isSticky ? 'sticky' : 'relative',
-    top: isSticky ? 0 : '508px',
+    top: isSticky ? 0 : '535px',
   };
 
   const linkStyle = {

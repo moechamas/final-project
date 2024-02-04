@@ -57,27 +57,50 @@ const EventsPage = () => {
     <div style={pageStyle}>
       <img src="/home.png" alt="Home" style={imageStyle} />
       {!isAuthenticated ? (
-        <button onClick={loginWithRedirect}>Login</button>
+        <div onClick={loginWithRedirect} style={{
+          cursor: 'pointer',
+          color: 'red',
+          textDecoration: 'underline',
+          fontSize: 'larger',
+          position: 'absolute',
+          top: '-250px', 
+          right: '30px', 
+          zIndex: 2 
+        }}>Login</div>
       ) : (
-        <button onClick={() => logout({ returnTo: window.location.origin })}>Logout</button>
+        <div onClick={() => logout({ returnTo: window.location.origin })} style={{
+          cursor: 'pointer',
+          color: 'red',
+          textDecoration: 'underline',
+          fontSize: '29px',
+          position: 'absolute', 
+          top: '390px', 
+          right: '940px', 
+          zIndex: 2 
+        }}>Logout</div>
       )}
       <div style={eventsBoxStyle}>
         {events && events.length > 0 && events.map((event) => (
           <div key={event.id} style={eventStyle}>
-            <h3>{event.title}</h3>
-            <p>Price: ${event.price}</p>
-            {isAuthenticated ? (
-              <button onClick={() => handleAddToCart(event)}>Add to Cart</button>
-            ) : (
-              <p style={loginPromptStyle} onClick={loginWithRedirect}>Login to purchase tickets</p>
-            )}
+            <div style={eventDetailsStyle}>
+              <h3>{event.title}</h3>
+              <p>{event.description}</p>
+              <p>Price: ${event.price}</p>
+              <p>Date: {event.startDate} - {event.endDate}</p>
+              {isAuthenticated ? (
+                <button onClick={() => handleAddToCart(event)}>{event.buttonLabel}</button>
+              ) : (
+                <p style={loginPromptStyle} onClick={loginWithRedirect}>Login to purchase tickets</p>
+              )}
+            </div>
           </div>
         ))}
       </div>
       {isCartVisible && <CartSummary />}
     </div>
   );
-};
+              };  
+
 
 
 
@@ -176,7 +199,7 @@ const imageStyle = {
   top: -140,
   left: 0,
   width: '100%',
-  height: '34.9%',
+  height: '28.9%',
 };
 
 const eventsBoxStyle = {
@@ -198,6 +221,10 @@ const eventStyle = {
   borderRadius: '10px',
   backgroundColor: '#fff',
   boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
+};
+
+const eventDetailsStyle = {
+  flex: 1, 
 };
 
 

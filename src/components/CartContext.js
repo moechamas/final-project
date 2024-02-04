@@ -44,8 +44,8 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     // Calculate the total cost whenever the cart changes
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const updatedTotal = isNaN(total) ? 0 : total; // Handle NaN case
-    console.log('Total Cost:', updatedTotal); // Add this line for debugging
+    const updatedTotal = isNaN(total) ? 0 : total; 
+    console.log('Total Cost:', updatedTotal); 
     setTotalCost(updatedTotal);
   }, [cart]);
   

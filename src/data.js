@@ -94,6 +94,44 @@ const events = [
       ticketId: 5,
     }
   ];
+
+  const pastEvents = [
+    {
+      id: 7,
+      title: "STARRY NIGHTS B2B MOONLIGHT MELODIES",
+      startDate: "January 20, 2024",
+      endDate: "January 21, 2024",
+      description: "A mesmerizing night under the glow of the moon, where Starry Nights and Moonlight Melodies came together for an unforgettable musical journey.",
+      image: "/event1.png" 
+    },
+    {
+      id: 8,
+      title: "SUNSET SERENADES B2B DAWN CHORUS",
+      startDate: "January 25, 2024",
+      endDate: "January 26, 2024",
+      description: "As the sun dipped below the horizon, Sunset Serenades and Dawn Chorus painted the sky with musical hues.",
+      image: "/event2.png" 
+    },
+  ];
+
+  const reviews = [
+    {
+      userName: "Sam Taylor",
+      eventId: 7,
+      comment: "The Starry Nights event was magical! The music perfectly complemented the moonlit night. Can't wait for the next one!",
+      description: "Dancing under the stars never felt so good. The DJ set was out of this world!",
+      rating: 5 
+    },
+    {
+      userName: "Riley Green",
+      eventId: 8,
+      comment: "Sunset Serenades brought the vibes and the community together. The transition from dusk till dawn was seamless and beautiful.",
+      description: "The music was a perfect match for the evening. Watching the sky change colors to the rhythm was an experience I'll never forget.",
+      rating: 4.5 
+
+    },
+  ];
   
-  module.exports = { events, reservations };
+  
+  module.exports = { events, reservations, pastEvents, reviews };
   
