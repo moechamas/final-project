@@ -119,16 +119,26 @@ const events = [
       userName: "Sam Taylor",
       eventId: 7,
       comment: "The Starry Nights event was magical! The music perfectly complemented the moonlit night. Can't wait for the next one!",
-      description: "Dancing under the stars never felt so good. The DJ set was out of this world!",
       rating: 5 
     },
     {
       userName: "Riley Green",
       eventId: 8,
       comment: "Sunset Serenades brought the vibes and the community together. The transition from dusk till dawn was seamless and beautiful.",
-      description: "The music was a perfect match for the evening. Watching the sky change colors to the rhythm was an experience I'll never forget.",
       rating: 4.5 
 
+    },
+    {
+      userName: "Casey Lee",
+      eventId: 7,
+      comment: "Absolutely loved the Starry Nights event. It was an experience of a lifetime!",
+      rating: 5
+    },
+    {
+      userName: "Jordan Smith",
+      eventId: 8,
+      comment: "Dawn Chorus was the perfect way to start the day. The music and vibes were unmatched.",
+      rating: 5
     },
   ];
   

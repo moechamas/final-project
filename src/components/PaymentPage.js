@@ -28,11 +28,10 @@ const PaymentPage = () => {
     // First, post the reservation
     await createReservation(orderDetails);
 
-    // Add order to context (if needed, depending on how you manage state)
     addOrder(orderDetails);
 
     alert('Order placed successfully!');
-    navigate('/your-order'); // Redirect to YourOrderPage
+    navigate('/your-order'); 
   };
 
   // Function to create a reservation
