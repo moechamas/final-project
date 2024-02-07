@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '/Users/chamas/Final-Project/final-project/.env' });
 
 const express = require('express');
+const session = require('express-session'); 
 const { auth, requiresAuth } = require('express-openid-connect');
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
 const cors = require('cors');
@@ -8,19 +9,39 @@ const { events, pastEvents, reviews } = require('../data');
 const { connectDB } = require('./mongodbUtil');
 
 const app = express();
+
+// Session configuration
+const sessionConfig = {
+  secret: 'pJjxygBL99YThVmF2B2_Pm44vMshm-MVrxNeQJt2wqpQTCN-zNR8bP4fIQ3rjly6', 
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', 
+    httpOnly: true, 
+    maxAge: 24 * 60 * 60 * 1000, 
+  }
+};
+
+// Apply session middleware
+app.use(session(sessionConfig));
+
 app.use(express.json());
 
 const port = 3006;
 
 // Enhanced Logging Middleware
 app.use((req, res, next) => {
-    console.log(`Incoming request: ${req.method} ${req.url}`);
-    console.log('Request Headers:', req.headers);
-    console.log(`Request Body: `, req.body);
-    next();
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  console.log('Request Headers:', req.headers);
+  console.log(`Request Body: `, req.body);
+  next();
 });
 
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:3005', 
+  credentials: true,
+}));
 
 
 // Auth0 Configuration
@@ -36,7 +57,7 @@ const config = {
   },
 };
 
-app.use(auth(config));
+
 
 app.get('/', (req, res) => {
   res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
@@ -92,7 +113,6 @@ app.get('/api/reservations/last', async (req, res) => {
 
 // Handler to fetch past events
 app.get('/api/past-events', (req, res) => {
-  // Simply return the pastEvents array; in a real app, you might query a database
   res.json(pastEvents);
 });
 
@@ -105,6 +125,23 @@ app.get('/api/reviews/:eventId', (req, res) => {
     res.json(eventReviews);
   } else {
     res.status(404).json({ message: `No reviews found for event with ID ${eventId}` });
+  }
+});
+
+
+app.post('/api/comments', async (req, res) => {
+  const { eventId, userName, comment } = req.body;
+
+  try {
+    const db = await connectDB();
+    const result = await db.collection('comments').insertOne({ eventId, userName, comment });
+    if (result.acknowledged) {
+      res.status(201).json({ message: 'Comment added successfully' });
+    } else {
+      res.status(500).json({ message: 'Failed to add comment' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
