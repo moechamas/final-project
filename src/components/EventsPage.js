@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
+import { useAuth } from './AuthContext'; 
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const navigate = useNavigate();
   const { cart, addToCart, removeFromCart, totalCost } = useContext(CartContext);
-  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+  const { isUserAuthenticated, loginWithRedirect, logout } = useAuth(); 
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -38,6 +38,7 @@ const EventsPage = () => {
     navigate('/payment'); 
   };
 
+
   const CartSummary = () => (
     <div style={cartSummaryStyle}>
       <button onClick={() => setIsCartVisible(false)} style={closeCartButtonStyle}>X</button>
@@ -56,7 +57,7 @@ const EventsPage = () => {
   return (
     <div style={pageStyle}>
       <img src="/home.png" alt="Home" style={imageStyle} />
-      {!isAuthenticated ? (
+      {!isUserAuthenticated ? (
         <div onClick={loginWithRedirect} style={{
           cursor: 'pointer',
           color: 'red',
@@ -87,7 +88,7 @@ const EventsPage = () => {
               <p>{event.description}</p>
               <p>Price: ${event.price}</p>
               <p>Date: {event.startDate} - {event.endDate}</p>
-              {isAuthenticated ? (
+              {isUserAuthenticated ? (
                 <button onClick={() => handleAddToCart(event)}>{event.buttonLabel}</button>
               ) : (
                 <p style={loginPromptStyle} onClick={loginWithRedirect}>Login to purchase tickets</p>
