@@ -129,6 +129,23 @@ app.get('/api/reviews/:eventId', (req, res) => {
 });
 
 
+app.post('/api/comments', async (req, res) => {
+  const { eventId, userName, comment } = req.body;
+
+  try {
+    const db = await connectDB();
+    const result = await db.collection('comments').insertOne({ eventId, userName, comment });
+    if (result.acknowledged) {
+      res.status(201).json({ message: 'Comment added successfully' });
+    } else {
+      res.status(500).json({ message: 'Failed to add comment' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
