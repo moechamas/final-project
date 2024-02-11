@@ -33,6 +33,8 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(cookieParser());
+
 
 
 // Auth0 Configuration
@@ -66,16 +68,14 @@ app.get('/api/events', (req, res) => {
 
 app.post('/api/reservations', async (req, res) => {
   try {
-    // Extract the session ID from the cookie
-    const sessionId = req.cookies['connect.sid']; 
+    const authHeader = req.headers['authorization'];
+    const sessionId = authHeader && authHeader.split(' ')[1];
     if (!sessionId) {
       return res.status(401).send("User is not authenticated");
     }
 
-    const reservationWithSessionId = {
-      ...req.body,
-      sessionId: sessionId, 
-    };
+    // Include the sessionId in the reservation details
+    const reservationWithSessionId = { ...req.body, sessionId };
 
     const db = await connectDB();
     const result = await db.collection('reservations').insertOne(reservationWithSessionId);
@@ -93,31 +93,30 @@ app.post('/api/reservations', async (req, res) => {
 });
 
 
+
+
 app.all('/api/reservations/last', async (req, res) => {
+  const authHeader = req.headers['authorization'];
+  console.log(`Received Authorization Header: ${authHeader}`);
+
+  const sessionId = authHeader && authHeader.split(' ')[1];
+  console.log(`Extracted Session ID: ${sessionId}`);
+
+  if (!sessionId) {
+    return res.status(401).send("User is not authenticated");
+  }
+
   try {
-    console.log("Received cookies:", req.cookies);
-
-    const sessionId = req.cookies['connect.sid'];
-    console.log("Attempting to fetch last reservation with session ID:", sessionId);
-
-    if (!sessionId) {
-      console.log("No session ID found in request, user not authenticated.");
-      return res.status(401).send("User is not authenticated");
-    }
-
     const db = await connectDB();
-    console.log("Connected to MongoDB successfully.");
-
     const lastReservation = await db.collection('reservations')
-      .find({ sessionId: sessionId })
+      .find({ sessionId })
       .sort({ _id: -1 })
       .limit(1)
       .toArray();
 
-    console.log("Query result for last reservation:", lastReservation);
+    console.log(`Query result for last reservation: ${JSON.stringify(lastReservation)}`);
 
     if (lastReservation.length > 0) {
-      console.log("Found last reservation, sending to client.");
       res.json(lastReservation[0]);
     } else {
       console.log("No reservations found for session ID:", sessionId);
@@ -128,6 +127,8 @@ app.all('/api/reservations/last', async (req, res) => {
     res.status(500).send("Error fetching the last reservation");
   }
 });
+
+
 
 
 

@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import EventComments from './EventComments'; 
-
+import EventComments from './EventComments';
 
 const BlogPage = () => {
   const [pastEvents, setPastEvents] = useState([]);
   const [reviews, setReviews] = useState({});
-  const [newComments, setNewComments] = useState({}); 
-  const [username, setUsername] = useState(`Guest${Math.floor(Math.random() * 10000)}`);
+  const [newComments, setNewComments] = useState({});
+  const [username, setUsername] = useState('');
   const { isUserAuthenticated } = useAuth();
   const [showUsernamePopup, setShowUsernamePopup] = useState(false);
 
   useEffect(() => {
     console.log("User isAuthenticated:", isUserAuthenticated);
 
+    const savedUsername = localStorage.getItem('username') || `Guest${Math.floor(Math.random() * 10000)}`;
+    setUsername(savedUsername);
+
     if (isUserAuthenticated && !localStorage.getItem('username')) {
       setShowUsernamePopup(true);
-    } else {
-      const storedUsername = localStorage.getItem('username');
-      if (storedUsername) {
-        setUsername(storedUsername);
-      }
     }
+
+    const savedComments = JSON.parse(localStorage.getItem('newComments')) || {};
+    setNewComments(savedComments);
+
     fetch('/api/past-events')
       .then(response => response.json())
       .then(data => {
@@ -30,7 +31,7 @@ const BlogPage = () => {
           acc[event.id] = [];
           return acc;
         }, {});
-        setNewComments(initialComments);
+        setNewComments(prevComments => ({ ...initialComments, ...prevComments }));
 
         data.forEach(event => {
           fetch(`/api/reviews/${event.id}`)
@@ -45,7 +46,8 @@ const BlogPage = () => {
         });
       })
       .catch(error => console.error('Error fetching past events:', error));
-  }, []);
+  }, [isUserAuthenticated]);
+
 
   const handleSaveUsername = (newUsername) => {
     console.log("Username saved:", newUsername);
@@ -54,21 +56,17 @@ const BlogPage = () => {
     setShowUsernamePopup(false);
   };
 
-  // Function to handle new comment submission
   const handleCommentSubmit = async (eventId, commentText) => {
-    if (!commentText.trim()) return; // Prevent adding empty comments
-  
+    if (!commentText.trim()) return;
+
     const comment = { userName: username, comment: commentText };
     const eventComments = newComments[eventId] ? [...newComments[eventId], comment] : [comment];
     const updatedComments = { ...newComments, [eventId]: eventComments };
-  
-    // Update sessionStorage logic remains the same
-    sessionStorage.setItem('newComments', JSON.stringify(updatedComments));
-    
-    // Make sure to update the state
+
+    localStorage.setItem('newComments', JSON.stringify(updatedComments));
     setNewComments(updatedComments);
   };
-  
+
 
   return (
     <div>
