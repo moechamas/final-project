@@ -39,22 +39,41 @@ const PaymentPage = () => {
 
   const createReservation = async (reservationDetails) => {
     try {
-        const response = await fetch('http://localhost:3006/api/reservations', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include', 
-            body: JSON.stringify(reservationDetails),
-          });
-          
-      if (!response.ok) throw new Error('Failed to create the reservation');
-      const data = await response.json();
-      console.log("Reservation created:", data);
-      return data;
+      const response = await fetch('http://localhost:3006/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(reservationDetails),
+      });
+  
+      // Check if the response is OK (status in the range 200-299)
+      if (!response.ok) {
+        console.error('Error creating the reservation: Request failed with status', response.status);
+        // Attempt to read the response as text to log or process further
+        const responseText = await response.text();
+        console.error('Response:', responseText);
+        throw new Error('Failed to create the reservation');
+      }
+  
+      // Check if the response is in JSON format before parsing
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await response.json();
+        console.log("Reservation created:", data);
+        return data;
+      } else {
+        // Handle non-JSON responses, if necessary
+        const responseText = await response.text();
+        throw new Error(`Expected JSON response, got '${contentType}'`);
+      }
     } catch (error) {
       console.error('Error creating the reservation:', error);
+      // Handle or log the error appropriately
+      // Consider showing a user-friendly error message or taking other recovery actions
     }
   };
-
+  
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCustomerDetails(prevState => ({ ...prevState, [name]: value }));

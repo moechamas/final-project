@@ -65,33 +65,91 @@ app.get('/api/events', (req, res) => {
   res.json(events);
 });
 
+app.get('/api/events/:id', async (req, res) => {
+  const { id } = req.params; 
 
-app.post('/api/reservations', async (req, res) => {
+  
+  const numericId = Number(id);
+
   try {
-    const authHeader = req.headers['authorization'];
-    const sessionId = authHeader && authHeader.split(' ')[1];
-    if (!sessionId) {
-      return res.status(401).send("User is not authenticated");
-    }
+    const db = await connectDB(); 
+    const collection = db.collection('events'); 
 
-    // Include the sessionId in the reservation details
-    const reservationWithSessionId = { ...req.body, sessionId };
+    
+    const event = await collection.findOne({ eventId: numericId });
 
-    const db = await connectDB();
-    const result = await db.collection('reservations').insertOne(reservationWithSessionId);
-    if (result.acknowledged) {
-      console.log("Reservation saved:", reservationWithSessionId);
-      res.status(201).send(reservationWithSessionId);
+    if (event) {
+      res.json(event); 
     } else {
-      console.error("Failed to save the reservation");
-      res.status(500).send("Failed to save the reservation");
+      res.status(404).send('Event not found'); 
     }
   } catch (error) {
-    console.error("Error saving the reservation:", error);
-    res.status(500).send("Error saving the reservation");
+    console.error('Error fetching the event:', error);
+    res.status(500).send('Error fetching the event');
   }
 });
 
+
+app.post('/api/reservations', async (req, res) => {
+  try {
+    const sessionId = req.cookies['sessionId'];
+    if (!sessionId) {
+      return res.status(401).json({ message: "User is not authenticated" });
+    }
+
+    const db = await connectDB();
+    let allReservationsProcessed = true; 
+
+    for (const item of req.body.items) {
+      const eventId = Number(item.eventId); 
+      const quantityToReserve = item.quantity;
+
+      // Fetch the event by its ID
+      const event = await db.collection('events').findOne({ eventId: eventId });
+      if (!event) {
+        allReservationsProcessed = false;
+        console.error(`Event not found for ID: ${eventId}`);
+        break; 
+      }
+
+      if (event.quantity < quantityToReserve) {
+        allReservationsProcessed = false;
+        console.error(`Insufficient quantity for event ID: ${eventId}`);
+        break; 
+      }
+
+      // Update the event's quantity
+      await db.collection('events').updateOne(
+        { eventId: eventId },
+        { $inc: { quantity: -quantityToReserve } }
+      );
+    }
+
+    // Only proceed to create the reservation if all items can be reserved
+    if (allReservationsProcessed) {
+      const reservationResult = await db.collection('reservations').insertOne({
+        ...req.body, 
+        sessionId: sessionId,
+      });
+
+      if (reservationResult.acknowledged) {
+        // Send success response as JSON
+        res.status(201).json({ message: "Reservation successful and quantities updated" });
+      } else {
+        console.error("Failed to save the reservation");
+        // Send error as JSON
+        res.status(500).json({ message: "Failed to save the reservation" });
+      }
+    } else {
+      // Send error as JSON for partial processing
+      res.status(400).json({ message: "One or more items in the reservation could not be processed due to insufficient quantity or event not found" });
+    }
+  } catch (error) {
+    console.error("Error processing the reservation:", error);
+    // Send server error as JSON
+    res.status(500).json({ message: "Error processing the reservation", error: error.message });
+  }
+});
 
 
 
@@ -99,9 +157,7 @@ app.all('/api/reservations/last', async (req, res) => {
   const authHeader = req.headers['authorization'];
   console.log(`Received Authorization Header: ${authHeader}`);
 
-  const sessionId = authHeader && authHeader.split(' ')[1];
-  console.log(`Extracted Session ID: ${sessionId}`);
-
+  const sessionId = req.cookies['sessionId'];
   if (!sessionId) {
     return res.status(401).send("User is not authenticated");
   }
