@@ -6,8 +6,13 @@ const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
 const cors = require('cors');
 const { events, pastEvents, reviews } = require('../data');
 const { connectDB } = require('./mongodbUtil');
+const { MongoClient } = require('mongodb');
+
 
 const app = express();
+const uri = process.env.MONGODB_URI; 
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const databaseName = "FinalProject";
 
 
 
@@ -60,10 +65,22 @@ app.get('/', (req, res) => {
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
-
-app.get('/api/events', (req, res) => {
-  res.json(events);
+app.get('/api/events', async (req, res) => {
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const eventsCollection = database.collection('events');
+    
+    const events = await eventsCollection.find({}).toArray();
+    res.json(events);
+  } catch (error) {
+    console.error('Error fetching events from MongoDB:', error);
+    res.status(500).json({ error: 'Error fetching events' });
+  } finally {
+    await client.close();
+  }
 });
+
 
 app.get('/api/events/:id', async (req, res) => {
   const { id } = req.params; 
@@ -133,20 +150,16 @@ app.post('/api/reservations', async (req, res) => {
       });
 
       if (reservationResult.acknowledged) {
-        // Send success response as JSON
         res.status(201).json({ message: "Reservation successful and quantities updated" });
       } else {
         console.error("Failed to save the reservation");
-        // Send error as JSON
         res.status(500).json({ message: "Failed to save the reservation" });
       }
     } else {
-      // Send error as JSON for partial processing
       res.status(400).json({ message: "One or more items in the reservation could not be processed due to insufficient quantity or event not found" });
     }
   } catch (error) {
     console.error("Error processing the reservation:", error);
-    // Send server error as JSON
     res.status(500).json({ message: "Error processing the reservation", error: error.message });
   }
 });
@@ -193,22 +206,47 @@ app.all('/api/reservations/last', async (req, res) => {
 
 
 
-// Handler to fetch past events
-app.get('/api/past-events', (req, res) => {
-  res.json(pastEvents);
-});
-
-// Handler to fetch reviews for a specific past event
-app.get('/api/reviews/:eventId', (req, res) => {
-  const { eventId } = req.params;
-  const eventReviews = reviews.filter(review => review.eventId === parseInt(eventId));
-
-  if (eventReviews.length > 0) {
-    res.json(eventReviews);
-  } else {
-    res.status(404).json({ message: `No reviews found for event with ID ${eventId}` });
+app.get('/api/past-events', async (req, res) => {
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const pastEventsCollection = database.collection('pastEvents'); 
+    
+    const pastEvents = await pastEventsCollection.find({}).toArray();
+    res.json(pastEvents);
+  } catch (error) {
+    console.error('Error fetching past events from MongoDB:', error);
+    res.status(500).json({ error: 'Error fetching past events' });
+  } finally {
+    await client.close();
   }
 });
+
+
+app.get('/api/reviews/:eventId', async (req, res) => {
+  const { eventId } = req.params;
+  
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const reviewsCollection = database.collection('reviews'); 
+    
+    const query = { eventId: parseInt(eventId) };
+
+    const eventReviews = await reviewsCollection.find(query).toArray();
+
+    if (eventReviews.length > 0) {
+      res.json(eventReviews);
+    } else {
+      res.status(404).json({ message: `No reviews found for event with ID ${eventId}` });
+    }
+  } catch (error) {
+    console.error('Error fetching reviews from MongoDB:', error);
+    res.status(500).json({ error: 'Error fetching reviews' });
+ 
+  }
+});
+
 
 
 app.post('/api/comments', async (req, res) => {

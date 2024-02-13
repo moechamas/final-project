@@ -48,7 +48,6 @@ const BlogPage = () => {
       .catch(error => console.error('Error fetching past events:', error));
   }, [isUserAuthenticated]);
 
-
   const handleSaveUsername = (newUsername) => {
     console.log("Username saved:", newUsername);
     localStorage.setItem('username', newUsername);
@@ -67,12 +66,27 @@ const BlogPage = () => {
     setNewComments(updatedComments);
   };
 
+  const welcomeMessageStyle = {
+    position: 'relative',
+    zIndex: 2,
+    textAlign: 'center',
+    top: '600px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: '#007bff', 
+    color: 'white', 
+    padding: '10px 20px',
+    borderRadius: '20px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    maxWidth: '400px',
+    wordWrap: 'break-word',
+  };
 
   return (
     <div>
       <img src="/blog.png" alt="Blog Background" style={{ width: '100%', maxHeight: '600px', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
       {!username.startsWith('Guest') && (
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', top: '600px', left: '50%', transform: 'translateX(-50%)' }}>
+        <div style={welcomeMessageStyle}>
           <h2>Welcome, {username}!</h2>
         </div>
       )}
@@ -111,8 +125,6 @@ const BlogPage = () => {
       )}
     </div>
   );
-  
-  
 };
 
 const UsernamePopup = ({ isOpen, onSave, onClose }) => {

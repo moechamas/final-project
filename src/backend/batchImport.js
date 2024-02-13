@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
-const { events, reservations } = require('../data.js');
+const { events, reservations, pastEvents, reviews } = require('../data.js');
 
-const uri = "mongodb+srv://moechamas:fDrc4hrYcWW4iTeG@cluster0.ovqzwlc.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://moechamas:momo@cluster0.ovqzwlc.mongodb.net/?retryWrites=true&w=majority";
 
 async function batchImport() {
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -13,14 +13,21 @@ async function batchImport() {
     const database = client.db("FinalProject");
     const eventsCollection = database.collection("events");
     const reservationsCollection = database.collection("reservations");
+    const pastEventsCollection = database.collection("pastEvents");
+    const reviewsCollection = database.collection("reviews");
 
-    // Insert events
     const eventsResult = await eventsCollection.insertMany(events);
     console.log(`${eventsResult.insertedCount} events documents were inserted`);
 
-    // Insert reservations
     const reservationsResult = await reservationsCollection.insertMany(reservations);
     console.log(`${reservationsResult.insertedCount} reservations documents were inserted`);
+
+    const pastEventsResult = await pastEventsCollection.insertMany(pastEvents);
+    console.log(`${pastEventsResult.insertedCount} past events documents were inserted`);
+
+    // Insert reviews
+    const reviewsResult = await reviewsCollection.insertMany(reviews);
+    console.log(`${reviewsResult.insertedCount} reviews documents were inserted`);
   } catch (e) {
     console.error(e);
   } finally {
