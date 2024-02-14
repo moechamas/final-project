@@ -13,7 +13,6 @@ export const CartProvider = ({ children }) => {
   
     if (existingItemIndex > -1) {
       console.log("Item exists, updating quantity");
-      // Item exists, update the quantity
       const updatedCart = cart.map((item, index) => {
         if (index === existingItemIndex) {
           return { ...item, quantity: item.quantity + 1 };
@@ -23,7 +22,6 @@ export const CartProvider = ({ children }) => {
       setCart(updatedCart);
     } else {
       console.log("Item does not exist, adding new item");
-      // Item does not exist, add new item
       setCart([...cart, { ...newItem, quantity: 1 }]);
     }
   };

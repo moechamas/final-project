@@ -9,6 +9,7 @@ const { connectDB } = require('./mongodbUtil');
 const { MongoClient } = require('mongodb');
 
 
+
 const app = express();
 const uri = process.env.MONGODB_URI; 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -198,14 +199,6 @@ app.all('/api/reservations/last', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
 app.get('/api/past-events', async (req, res) => {
   try {
     await client.connect();
@@ -295,8 +288,6 @@ function generateSessionId() {
     return v.toString(16);
   });
 }
-
-
 
 
 

@@ -29,12 +29,10 @@ export const AuthProvider = ({ children }) => {
             throw new Error('Session initialization failed');
           }
 
-          // Extract session ID from server response
           const { sessionId } = await response.json();
           setSessionId(sessionId); 
           console.log('Retrieved session ID:', sessionId); 
 
-          // Optionally handle session initializaion success
         } catch (error) {
           console.error('Error initializing session:', error);
         }
