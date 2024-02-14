@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 
 const YourOrderPage = () => {
   const [order, setOrder] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const { isUserAuthenticated, user } = useAuth();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const YourOrderPage = () => {
       try {
         const response = await fetch('http://localhost:3006/api/reservations/last', {
           method: 'GET',
-          credentials: 'include', 
+          credentials: 'include',
         });
 
         console.log('Fetch response status:', response.status);
@@ -39,15 +39,13 @@ const YourOrderPage = () => {
     fetchLastReservation();
   }, [isUserAuthenticated, user]);
 
-
-
-
-  
   return (
     <div>
       <img src="/Home12.png" alt="Home" style={{ width: '100%', maxHeight: '600px', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 auto', maxWidth: '1500px', marginTop: '550px' }}>
-        {order ? (
+        {isLoading ? (
+          <div>Loading your order...</div>
+        ) : order ? (
           <div style={{ backgroundColor: '#f3f3f3', padding: '20px', margin: '20px 0', boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)', width: '90%', borderRadius: '10px' }}>
             <h3>Order ID: {order.ticketId}</h3>
             <p>Total Cost: ${order.totalCost.toFixed(2)}</p>
@@ -58,6 +56,7 @@ const YourOrderPage = () => {
                 <li key={index}>{item.description} - ${item.price} x {item.quantity}</li>
               ))}
             </ul>
+            <p style={{ marginTop: '20px' }}>Orders are processed immediately and will disappear from this page after a short period. A confirmation will be sent to your email.</p>
           </div>
         ) : (
           <div style={{ backgroundColor: '#f3f3f3', padding: '20px', margin: '20px 0', boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)', width: '90%', borderRadius: '10px' }}>

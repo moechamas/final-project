@@ -7,8 +7,12 @@ export const CartProvider = ({ children }) => {
   const [totalCost, setTotalCost] = useState(0);
 
   const addToCart = (newItem) => {
+    console.log("Adding item to cart", newItem);
     const existingItemIndex = cart.findIndex(item => item.eventId === newItem.eventId);
+    console.log("Existing item index", existingItemIndex);
+  
     if (existingItemIndex > -1) {
+      console.log("Item exists, updating quantity");
       // Item exists, update the quantity
       const updatedCart = cart.map((item, index) => {
         if (index === existingItemIndex) {
@@ -18,10 +22,12 @@ export const CartProvider = ({ children }) => {
       });
       setCart(updatedCart);
     } else {
+      console.log("Item does not exist, adding new item");
       // Item does not exist, add new item
       setCart([...cart, { ...newItem, quantity: 1 }]);
     }
   };
+  
 
   const removeFromCart = (eventId) => {
     const existingItemIndex = cart.findIndex(item => item.eventId === eventId);

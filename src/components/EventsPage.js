@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { useAuth } from './AuthContext'; 
 
+
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [isCartVisible, setIsCartVisible] = useState(false);
@@ -25,7 +26,7 @@ const EventsPage = () => {
 
   const handleAddToCart = (event) => {
     const newItem = {
-      eventId: event.id,
+      eventId: event.eventId, 
       description: event.title,
       quantity: 1,
       price: event.price,
@@ -33,6 +34,7 @@ const EventsPage = () => {
     addToCart(newItem);
     setIsCartVisible(true);
   };
+  
 
   const redirectToPaymentPage = () => {
     navigate('/payment'); 
@@ -81,21 +83,21 @@ const EventsPage = () => {
         }}>Logout</div>
       )}
       <div style={eventsBoxStyle}>
-        {events && events.length > 0 && events.map((event) => (
-          <div key={event.id} style={eventStyle}>
-            <div style={eventDetailsStyle}>
-              <h3>{event.title}</h3>
-              <p>{event.description}</p>
-              <p>Price: ${event.price}</p>
-              <p>Date: {event.startDate} - {event.endDate}</p>
-              {isUserAuthenticated ? (
-                <button onClick={() => handleAddToCart(event)}>{event.buttonLabel}</button>
-              ) : (
-                <p style={loginPromptStyle} onClick={loginWithRedirect}>Login to purchase tickets</p>
-              )}
-            </div>
-          </div>
-        ))}
+      {events && events.length > 0 && events.map((event) => (
+  <div key={event.eventId} style={eventStyle}> {/* Adjusted from event.id to event.eventId */}
+    <div style={eventDetailsStyle}>
+      <h3>{event.title}</h3>
+      <p>{event.description}</p>
+      <p>Price: ${event.price}</p>
+      <p>Date: {event.startDate} - {event.endDate}</p>
+      {isUserAuthenticated ? (
+        <button onClick={() => handleAddToCart(event)}>{event.buttonLabel}</button>
+      ) : (
+        <p style={loginPromptStyle} onClick={loginWithRedirect}>Login to purchase tickets</p>
+      )}
+    </div>
+  </div>
+))}
       </div>
       {isCartVisible && <CartSummary />}
     </div>
@@ -201,6 +203,9 @@ const imageStyle = {
   left: 0,
   width: '100%',
   height: '28.9%',
+  '@media (maxWidth: 68px)': { // This syntax might vary based on how you're injecting styles
+    height: '95%', // Adjust this value as needed
+  },
 };
 
 const eventsBoxStyle = {
