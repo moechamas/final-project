@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import EventComments from './EventComments';
+import './blogStyles.css'; 
+
 
 const BlogPage = () => {
   const [pastEvents, setPastEvents] = useState([]);
@@ -66,52 +68,38 @@ const BlogPage = () => {
     setNewComments(updatedComments);
   };
 
-  const welcomeMessageStyle = {
-    position: 'relative',
-    zIndex: 2,
-    textAlign: 'center',
-    top: '600px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#007bff', 
-    color: 'white', 
-    padding: '10px 20px',
-    borderRadius: '20px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    maxWidth: '400px',
-    wordWrap: 'break-word',
-  };
+
 
   return (
     <div>
-      <img src="/blog.png" alt="Blog Background" style={{ width: '100%', maxHeight: '600px', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
+      <img src="/blog.png" alt="Blog Background" className="blog-background" />
       {!username.startsWith('Guest') && (
-        <div style={welcomeMessageStyle}>
+        <div className="welcome-message">
           <h2>Welcome, {username}!</h2>
         </div>
       )}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 auto', maxWidth: '1500px', paddingTop: '650px' }}>
+      <div className="blog-content-container">
         {pastEvents.map(event => (
-          <div key={event.id} style={{ backgroundColor: '#f3f3f3', padding: '20px', margin: '20px 0', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', width: '90%', borderRadius: '10px', position: 'relative', zIndex: 1 }}>
+          <div key={event.id} className="event-card">
             <h3>{event.title}</h3>
             <p><strong>Posted by: Spot - Mtl</strong></p>
             <p>{event.description}</p>
-            <img src={event.image} alt={event.title} style={{ width: '55%', height: 'auto', borderRadius: '10px', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} />
-            <div style={{marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #ccc'}}>
+            <img src={event.image} alt={event.title} className="event-image" />
+            <div className="comments-section">
               <h4>Comments</h4>
-              <ul style={{ listStyleType: 'none', padding: '0' }}>
+              <ul className="comments-list">
                 {reviews[event.id] && reviews[event.id].length > 0 && reviews[event.id].map((review, index) => (
-                  <li key={index} style={{ background: '#e9e9e9', margin: '10px 0', padding: '10px', borderRadius: '5px' }}>
+                  <li key={index} className="comment-item">
                     <strong>{review.userName}:</strong> {review.comment}
                   </li>
                 ))}
                 {newComments[event.id] && newComments[event.id].map((comment, index) => (
-                  <li key={`new-${index}`} style={{ background: '#d9d9d9', margin: '10px 0', padding: '10px', borderRadius: '5px' }}>
+                  <li key={`new-${index}`} className="new-comment-item">
                     <strong>{comment.userName}:</strong> {comment.comment}
                   </li>
                 ))}
               </ul>
-              <EventComments event={event} onCommentSubmit={(eventId, commentText) => handleCommentSubmit(eventId, commentText)} />
+              <EventComments event={event} onCommentSubmit={handleCommentSubmit} />
             </div>
           </div>
         ))}
@@ -126,6 +114,7 @@ const BlogPage = () => {
     </div>
   );
 };
+
 
 const UsernamePopup = ({ isOpen, onSave, onClose }) => {
   const [username, setUsername] = useState('');

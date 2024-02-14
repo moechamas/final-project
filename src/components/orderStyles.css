@@ -1,0 +1,47 @@
+
+ .order-page-background {
+    width: 100%;
+    position: absolute;
+    height: 76%; 
+    top: 0;
+    left: 0;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .order-page-background {
+      height: auto; 
+    }
+  }
+  
+  
+  .order-content-container {
+    display: flex;
+    flex-Direction: column;
+    align-Items: center;
+    margin: 0 auto;
+    max-Width: 1500px;
+    margin-Top: 550px;
+    
+  }
+  
+  .order-details, .no-orders-message {
+    background-Color: #f3f3f3;
+    padding: 20px;
+    margin: 20px 0;
+    box-Shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    border-Radius: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .order-details, .no-orders-message {
+      padding: 0; 
+
+    }
+    .order-content-container {
+      margin-Top: 130px; 
+    }
+  }
+  
+  

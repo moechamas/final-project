@@ -46,30 +46,24 @@ const PaymentPage = () => {
         body: JSON.stringify(reservationDetails),
       });
   
-      // Check if the response is OK (status in the range 200-299)
       if (!response.ok) {
         console.error('Error creating the reservation: Request failed with status', response.status);
-        // Attempt to read the response as text to log or process further
         const responseText = await response.text();
         console.error('Response:', responseText);
         throw new Error('Failed to create the reservation');
       }
   
-      // Check if the response is in JSON format before parsing
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
         const data = await response.json();
         console.log("Reservation created:", data);
         return data;
       } else {
-        // Handle non-JSON responses, if necessary
         const responseText = await response.text();
         throw new Error(`Expected JSON response, got '${contentType}'`);
       }
     } catch (error) {
       console.error('Error creating the reservation:', error);
-      // Handle or log the error appropriately
-      // Consider showing a user-friendly error message or taking other recovery actions
     }
   };
   

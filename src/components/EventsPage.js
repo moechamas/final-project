@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { useAuth } from './AuthContext'; 
-
+import './mobileStyles.css'; 
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -42,8 +42,8 @@ const EventsPage = () => {
 
 
   const CartSummary = () => (
-    <div style={cartSummaryStyle}>
-      <button onClick={() => setIsCartVisible(false)} style={closeCartButtonStyle}>X</button>
+    <div className="cart-summary" >
+    <button onClick={() => setIsCartVisible(false)} style={closeCartButtonStyle}>X</button>
       <h3 style={cartSummaryHeadingStyle}>Cart Summary</h3>
       {cart && cart.length > 0 && cart.map((item, index) => (
         <div key={index} style={cartItemSummaryStyle}>
@@ -58,7 +58,7 @@ const EventsPage = () => {
 
   return (
     <div style={pageStyle}>
-      <img src="/home.png" alt="Home" style={imageStyle} />
+      <img src="/home.png" alt="Home" className='image-style'  />
       {!isUserAuthenticated ? (
         <div onClick={loginWithRedirect} style={{
           cursor: 'pointer',
@@ -82,9 +82,9 @@ const EventsPage = () => {
           zIndex: 2 
         }}>Logout</div>
       )}
-      <div style={eventsBoxStyle}>
+<div className="events-box">
       {events && events.length > 0 && events.map((event) => (
-  <div key={event.eventId} style={eventStyle}> {/* Adjusted from event.id to event.eventId */}
+  <div key={event.eventId} style={eventStyle}> 
     <div style={eventDetailsStyle}>
       <h3>{event.title}</h3>
       <p>{event.description}</p>
@@ -108,22 +108,6 @@ const EventsPage = () => {
 
 
 // Style objects
-
-
-const cartSummaryStyle = {
-  position: 'fixed',
-  top: 0,
-  right: 0,
-  width: '300px', 
-  height: '100vh',
-  backgroundColor: '#f8f8f8',
-  padding: '20px',
-  boxShadow: '-3px 0px 10px rgba(0, 0, 0, 0.2)',
-  transition: 'transform 0.3s ease-in-out',
-  overflowY: 'auto',
-  zIndex: 1001,
-};
-
 
 const cartSummaryHeadingStyle = {
   textAlign: 'center',
@@ -173,7 +157,6 @@ const closeCartButtonStyle = {
 };
 
 
-
 const loginPromptStyle = {
   color: '#007bff',
   cursor: 'pointer',
@@ -190,36 +173,6 @@ const removeItemButtonStyle = {
 };
 
 
-
-
-const pageStyle = {
-  position: 'relative',
-  paddingTop: '38.8%',
-};
-
-const imageStyle = {
-  position: 'absolute',
-  top: -140,
-  left: 0,
-  width: '100%',
-  height: '28.9%',
-  '@media (maxWidth: 68px)': { // This syntax might vary based on how you're injecting styles
-    height: '95%', // Adjust this value as needed
-  },
-};
-
-const eventsBoxStyle = {
-  padding: '20px',
-  borderRadius: '15px',
-  backgroundColor: '#f3f3f3',
-  boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',
-  width: '97%',
-  maxWidth: '1500px',
-  marginTop: '-100px',
-  overflowY: 'auto',
-  zIndex: 2,
-};
-
 const eventStyle = {
   margin: '48px 0',
   padding: '20px',
@@ -232,8 +185,6 @@ const eventStyle = {
 const eventDetailsStyle = {
   flex: 1, 
 };
-
-
 
 
 export default EventsPage;
