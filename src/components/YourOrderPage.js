@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import './orderStyles.css'
+import './orderStyles.css';
+import { Link } from 'react-router-dom'; 
 
 const YourOrderPage = () => {
   const [order, setOrder] = useState(null);
@@ -61,14 +62,12 @@ const YourOrderPage = () => {
           </div>
         ) : (
           <div className="no-orders-message">
-            <p>No orders placed.</p>
+            <p>No orders placed. You can <Link to="/events">buy tickets on the Events Page</Link>.</p> 
           </div>
         )}
       </div>
     </div>
   );
 };
-
-
 
 export default YourOrderPage;

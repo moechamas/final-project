@@ -14,6 +14,7 @@ const app = express();
 const uri = process.env.MONGODB_URI; 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const databaseName = "FinalProject";
+const { ObjectId } = require('mongodb');
 
 
 
@@ -162,6 +163,34 @@ app.post('/api/reservations', async (req, res) => {
   } catch (error) {
     console.error("Error processing the reservation:", error);
     res.status(500).json({ message: "Error processing the reservation", error: error.message });
+  }
+});
+
+app.delete('/api/reservations/:ticketId', async (req, res) => {
+  try {
+    const ticketId = req.params.ticketId;
+    console.log("Deleting reservation with ticketId:", ticketId); 
+    const db = await connectDB();
+
+    // Check if the reservation exists
+    const reservation = await db.collection('reservations').findOne({ ticketId: ticketId });
+    console.log("Found reservation:", reservation); 
+    if (!reservation) {
+      console.error("Reservation not found"); 
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    const deleteResult = await db.collection('reservations').deleteOne({ ticketId: ticketId });
+    console.log("Delete result:", deleteResult); 
+    if (deleteResult.deletedCount === 1) {
+      res.status(200).json({ message: "Reservation deleted successfully" });
+    } else {
+      console.error("Failed to delete the reservation");
+      res.status(500).json({ message: "Failed to delete the reservation" });
+    }
+  } catch (error) {
+    console.error("Error deleting the reservation:", error);
+    res.status(500).json({ message: "Error deleting the reservation", error: error.message });
   }
 });
 
