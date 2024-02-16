@@ -3,7 +3,6 @@ import { useAuth } from './AuthContext';
 import EventComments from './EventComments';
 import './blogStyles.css'; 
 
-
 const BlogPage = () => {
   const [pastEvents, setPastEvents] = useState([]);
   const [reviews, setReviews] = useState({});
@@ -68,16 +67,16 @@ const BlogPage = () => {
     setNewComments(updatedComments);
   };
 
-
-
   return (
     <div>
       <img src="/blog.png" alt="Blog Background" className="blog-background" />
-      {!username.startsWith('Guest') && (
-        <div className="welcome-message">
-          <h2>Welcome, {username}!</h2>
-        </div>
-      )}
+      <div className="welcome-box">
+        {!username.startsWith('Guest') && (
+          <div className="welcome-message">
+            <h2>Welcome, {username}!</h2>
+          </div>
+        )}
+      </div>
       <div className="blog-content-container">
         {pastEvents.map(event => (
           <div key={event.id} className="event-card">
@@ -114,7 +113,6 @@ const BlogPage = () => {
     </div>
   );
 };
-
 
 const UsernamePopup = ({ isOpen, onSave, onClose }) => {
   const [username, setUsername] = useState('');

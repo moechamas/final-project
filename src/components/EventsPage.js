@@ -106,7 +106,6 @@ const EventsPage = () => {
 
 
 
-
 // Style objects
 
 const cartSummaryHeadingStyle = {
@@ -174,34 +173,11 @@ const removeItemButtonStyle = {
 };
 
 
-
-
 const pageStyle = {
   position: 'relative',
   paddingTop: '38.8%',
 };
 
-// const imageStyle = {
-//   position: 'absolute',
-//   top: -140,
-//   left: 0,
-//   width: '100%',
-//   height: '28.9%',
- 
-//   };
-
-
-// const eventsBoxStyle = {
-//   padding: '20px',
-//   borderRadius: '15px',
-//   backgroundColor: '#f3f3f3',
-//   boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',
-//   width: '97%',
-//   maxWidth: '1500px',
-//   marginTop: '-100px',
-//   overflowY: 'auto',
-//   zIndex: 2,
-// };
 
 const eventStyle = {
   margin: '48px 0',
