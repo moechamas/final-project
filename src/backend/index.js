@@ -1,5 +1,5 @@
-require('dotenv').config({ path: '/Users/chamas/Final-Project/final-project/src/backend/.env' });
-
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, 'backend', '.env') });
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
