@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import EventComments from './EventComments';
 import './blogStyles.css'; 
+import BlogImage from '../images/blog.png';
 
 const BlogPage = () => {
   const [pastEvents, setPastEvents] = useState([]);
@@ -69,7 +70,7 @@ const BlogPage = () => {
 
   return (
     <div>
-      <img src="/blog.png" alt="Blog Background" className="blog-background" />
+      <img src={BlogImage} alt="Blog Background" className="blog-background" />
       <div className="welcome-box">
         {!username.startsWith('Guest') && (
           <div className="welcome-message">

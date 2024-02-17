@@ -43,7 +43,7 @@ const YourOrderPage = () => {
     };
 
     fetchLastReservation();
-  }, [isUserAuthenticated, sessionId, user?.email]);
+  }, [isUserAuthenticated, sessionId, user?.email])
 
     return (
     <div className="order-page-container">
