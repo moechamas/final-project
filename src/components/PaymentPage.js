@@ -53,6 +53,8 @@ const PaymentPage = () => {
   };
 
   const createReservation = async (reservationDetails) => {
+    console.log('Session ID before request:', sessionId); 
+
     try {
       const response = await fetch('https://backend-final-9ylj.onrender.com/api/reservations', {
         method: 'POST',
