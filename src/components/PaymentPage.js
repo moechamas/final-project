@@ -3,6 +3,8 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { CartContext } from './CartContext';
 import { OrdersContext } from './OrdersContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext'; 
+
 
 const PaymentPage = () => {
   const stripe = useStripe();
@@ -41,31 +43,26 @@ const PaymentPage = () => {
     try {
       const response = await fetch('https://backend-final-9ylj.onrender.com/api/reservations', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(reservationDetails),
-      });
-  
-      if (!response.ok) {
-        console.error('Error creating the reservation: Request failed with status', response.status);
-        const responseText = await response.text();
-        console.error('Response:', responseText);
-        throw new Error('Failed to create the reservation');
-      }
-  
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        const data = await response.json();
-        console.log("Reservation created:", data);
-        return data;
-      } else {
-        const responseText = await response.text();
-        throw new Error(`Expected JSON response, got '${contentType}'`);
-      }
-    } catch (error) {
-      console.error('Error creating the reservation:', error);
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionId}` 
+        },
+        credentials: 'include', 
+      body: JSON.stringify(reservationDetails),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create the reservation');
     }
-  };
+
+    const data = await response.json();
+    console.log('Reservation created:', data);
+  } catch (error) {
+    console.error('Error creating the reservation:', error);
+    setError(error.message);
+  }
+};
+
   
   
   const handleInputChange = (e) => {
