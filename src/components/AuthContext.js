@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     if (isAuthenticated) {
       initializeSession();
     }
-  }, [isAuthenticated, user, sessionId]);
+  }, [isAuthenticated, user]);
 
   const logout = (...args) => {
     localStorage.clear(); 
