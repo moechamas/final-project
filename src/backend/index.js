@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 
 app.use(cors({
-  origin: 'http://localhost:3005', 
+  origin: 'https://spot-montreal-client.onrender.com', 
   credentials: true,
 }));
 
