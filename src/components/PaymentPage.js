@@ -4,10 +4,12 @@ import { CartContext } from './CartContext';
 import { OrdersContext } from './OrdersContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; 
-const [error, setError] = useState(null); 
-
 
 const PaymentPage = () => {
+  const { sessionId } = useAuth(); 
+
+  const [error, setError] = useState(null); 
+
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -64,7 +66,6 @@ const PaymentPage = () => {
   }
 };
 
-  
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
