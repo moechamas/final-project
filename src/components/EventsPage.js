@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { useAuth } from './AuthContext'; 
 import './mobileStyles.css'; 
-import HomeImage from '../images/Home12.png';
+import HomeImage from '../images/Home.png';
 
 
 const EventsPage = () => {

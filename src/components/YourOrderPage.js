@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import './orderStyles.css';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import HomeImage from '../images/Home12.png';
 
 const YourOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { isUserAuthenticated, user, sessionId } = useAuth();
-  const [seshId, setSeshId] = useState(null)
-
-  useEffect(() => {
-    if(sessionId) {
-      console.log(sessionId)
-      setSeshId(sessionId)
-    }
-  }, [sessionId])
 
   useEffect(() => {
     console.log("Checking user authentication status:", isUserAuthenticated);
 
-    
-
-    if (!isUserAuthenticated) {
-      console.log('User is not authenticated. Preventing data fetch.');
+    if (!isUserAuthenticated || !sessionId) {
+      console.log('User is not authenticated or session ID is missing. Preventing data fetch.');
       return;
     }
 
@@ -32,8 +23,7 @@ const YourOrderPage = () => {
         const response = await fetch('https://backend-final-9ylj.onrender.com/api/reservations/last', {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${seshId}` 
+            'Authorization': `Bearer ${sessionId}` 
           },
           credentials: 'include',
         });
@@ -53,11 +43,11 @@ const YourOrderPage = () => {
     };
 
     fetchLastReservation();
-  }, [isUserAuthenticated, user]);
+  }, [isUserAuthenticated, sessionId, user?.email]);
 
     return (
     <div className="order-page-container">
-      <img src="/Home12.png" alt="Home" className="order-page-background" />
+    <img src={HomeImage} alt="Home" className="order-page-background" />
       <div className="order-content-container">
         {isLoading ? (
           <div className="loading-message">Loading your order...</div>
