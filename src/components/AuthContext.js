@@ -21,9 +21,11 @@ export const AuthProvider = ({ children }) => {
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
+              'sessionId': sessionId, 
             },
             body: JSON.stringify({ email: user.email }),
           });
+    
 
           if (!response.ok) {
             throw new Error('Session initialization failed');

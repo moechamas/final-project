@@ -7,6 +7,15 @@ import { useAuth } from './AuthContext';
 
 const PaymentPage = () => {
   const { sessionId } = useAuth(); 
+  const [seshId, setSeshId] = useState(null)
+
+  useEffect(() => {
+    if (sessionId) {
+      console.log('Session ID is now available:', sessionId);
+      setSeshId(sessionId)
+      
+    }
+  }, [sessionId]);
 
   const [error, setError] = useState(null); 
 
@@ -48,7 +57,7 @@ const PaymentPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionId}` 
+          'Authorization': `Bearer ${seshId}` 
         },
         credentials: 'include', 
       body: JSON.stringify(reservationDetails),

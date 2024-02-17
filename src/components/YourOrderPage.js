@@ -6,10 +6,20 @@ import { Link } from 'react-router-dom';
 const YourOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { isUserAuthenticated, user } = useAuth();
+  const { isUserAuthenticated, user, sessionId } = useAuth();
+  const [seshId, setSeshId] = useState(null)
+
+  useEffect(() => {
+    if(sessionId) {
+      console.log(sessionId)
+      setSeshId(sessionId)
+    }
+  }, [sessionId])
 
   useEffect(() => {
     console.log("Checking user authentication status:", isUserAuthenticated);
+
+    
 
     if (!isUserAuthenticated) {
       console.log('User is not authenticated. Preventing data fetch.');
@@ -23,7 +33,7 @@ const YourOrderPage = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionId}` 
+            'Authorization': `Bearer ${seshId}` 
           },
           credentials: 'include',
         });
