@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { useAuth } from './AuthContext'; 
 import './mobileStyles.css'; 
+import HomeImage from '../images/Home12.png';
+
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -58,7 +60,7 @@ const EventsPage = () => {
 
   return (
     <div style={pageStyle}>
-      <img src="/home.png" alt="Home" className='image-style'  />
+    <img src={HomeImage} alt="Home" className="image-style" />
       {!isUserAuthenticated ? (
         <div onClick={loginWithRedirect} style={{
           cursor: 'pointer',
