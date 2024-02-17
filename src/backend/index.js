@@ -20,7 +20,6 @@ const { ObjectId } = require('mongodb');
 
 
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
 
 const port = 3006;
 
