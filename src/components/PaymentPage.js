@@ -58,7 +58,7 @@ const PaymentPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${seshId}` 
+          'Authorization': `Bearer ${sessionId}` 
         },
         credentials: 'include', 
       body: JSON.stringify(reservationDetails),
