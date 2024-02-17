@@ -1,5 +1,5 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, 'backend', '.env') });
+require('dotenv').config({ path: '/Users/chamas/Final-Project/final-project/src/backend/.env' });
+
 const express = require('express');
 const { auth, requiresAuth } = require('express-openid-connect');
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY);
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 
 app.use(cors({
-  origin: 'https://spot-montreal-client.onrender.com', 
+  origin: 'http://localhost:3005', 
   credentials: true,
 }));
 

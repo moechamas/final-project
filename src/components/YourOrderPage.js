@@ -19,7 +19,7 @@ const YourOrderPage = () => {
     console.log('Fetching the last reservation for:', user?.email);
     const fetchLastReservation = async () => {
       try {
-        const response = await fetch('http://localhost:3006/api/reservations/last', {
+        const response = await fetch('https://backend-test4-slsb.onrender.com/api/reservations/last', {
           method: 'GET',
           credentials: 'include',
         });

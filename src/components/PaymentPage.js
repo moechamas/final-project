@@ -39,7 +39,7 @@ const PaymentPage = () => {
 
   const createReservation = async (reservationDetails) => {
     try {
-      const response = await fetch('http://localhost:3006/api/reservations', {
+      const response = await fetch('https://backend-test4-slsb.onrender.com/api/reservations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
