@@ -24,7 +24,7 @@ const BlogPage = () => {
     const savedComments = JSON.parse(localStorage.getItem('newComments')) || {};
     setNewComments(savedComments);
 
-    fetch('https://backend-test4-slsb.onrender.com/api/past-events')
+    fetch('https://backend-final-9ylj.onrender.com/api/past-events')
       .then(response => response.json())
       .then(data => {
         setPastEvents(data);
@@ -35,7 +35,7 @@ const BlogPage = () => {
         setNewComments(prevComments => ({ ...initialComments, ...prevComments }));
 
         data.forEach(event => {
-          fetch(`https://backend-test4-slsb.onrender.com/api/reviews/${event.id}`)
+          fetch(`https://backend-final-9ylj.onrender.com/api/reviews/${event.id}`)
             .then(response => response.json())
             .then(reviewsData => {
               setReviews(prevReviews => ({

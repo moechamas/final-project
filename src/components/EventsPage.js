@@ -14,7 +14,7 @@ const EventsPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('https://backend-test4-slsb.onrender.com/api/events');
+        const response = await fetch('https://backend-final-9ylj.onrender.com/api/events');
         const data = await response.json();
         setEvents(data);
       } catch (error) {

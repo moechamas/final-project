@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const initializeSession = async () => {
       if (isAuthenticated && user) {
         try {
-          const response = await fetch('https://backend-test4-slsb.onrender.com/api/session', {
+          const response = await fetch('https://backend-final-9ylj.onrender.com/api/session', {
             method: 'POST',
             credentials: 'include',
             headers: {
