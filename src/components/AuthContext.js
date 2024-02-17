@@ -21,30 +21,29 @@ export const AuthProvider = ({ children }) => {
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
-              'sessionId': sessionId, 
+              'sessionId': sessionId,
             },
             body: JSON.stringify({ email: user.email }),
           });
-    
-
+  
           if (!response.ok) {
             throw new Error('Session initialization failed');
           }
-
-          const { sessionId } = await response.json();
-          setSessionId(sessionId); 
-          console.log('Retrieved session ID:', sessionId); 
-
+  
+          const responseSessionId = (await response.json()).sessionId;
+          setSessionId(responseSessionId);
+          console.log('Retrieved session ID:', responseSessionId);
+  
         } catch (error) {
           console.error('Error initializing session:', error);
         }
       }
     };
-
+  
     if (isAuthenticated) {
       initializeSession();
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, sessionId]);
 
   const logout = (...args) => {
     localStorage.clear(); 
