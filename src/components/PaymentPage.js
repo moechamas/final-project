@@ -4,6 +4,7 @@ import { CartContext } from './CartContext';
 import { OrdersContext } from './OrdersContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; 
+const [error, setError] = useState(null); 
 
 
 const PaymentPage = () => {
