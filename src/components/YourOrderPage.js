@@ -21,6 +21,10 @@ const YourOrderPage = () => {
       try {
         const response = await fetch('https://backend-final-9ylj.onrender.com/api/reservations/last', {
           method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionId}` 
+          },
           credentials: 'include',
         });
 
